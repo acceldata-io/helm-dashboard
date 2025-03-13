@@ -1,0 +1,14 @@
+dashboard:
+  clusterWide: false
+
+  persistence:
+    enabled: false
+
+ingress:
+  enabled: true
+  className: "internal-kong"
+  hosts:
+    - host: helm.sentinel.acceldata.tech
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

@@ -41,6 +41,7 @@ resources:
 
 dashboard:
   allowWriteActions: true
+  clusterWide: true
 
   # default namespace for Helm operations
   namespace: ""

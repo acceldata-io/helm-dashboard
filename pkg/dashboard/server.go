@@ -45,8 +45,6 @@ func (s *Server) StartServer(ctx context.Context, cancel context.CancelFunc) (st
 		return "", nil, errorx.Decorate(err, "Failed to detect cluster mode")
 	}
 
-	go checkUpgrade(data.StatusInfo)
-
 	go data.PeriodicTasks(ctx)
 
 	api := NewRouter(cancel, data, s.Debug)
