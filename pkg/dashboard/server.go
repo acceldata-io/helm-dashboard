@@ -2,7 +2,6 @@ package dashboard
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -16,7 +15,6 @@ import (
 	"helm.sh/helm/v3/pkg/registry"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hashicorp/go-version"
 	"github.com/komodorio/helm-dashboard/v2/pkg/dashboard/utils"
 	log "github.com/sirupsen/logrus"
 )
@@ -125,47 +123,6 @@ func (s *Server) itIsUs() bool {
 	defer r.Body.Close()
 
 	return strings.HasPrefix(r.Header.Get("X-Application-Name"), "Helm Dashboard")
-}
-
-func checkUpgrade(d *objects.StatusInfo) { // TODO: check it once an hour
-	url := "https://api.github.com/repos/komodorio/helm-dashboard/releases/latest"
-	type GHRelease struct {
-		Name string `json:"name"`
-	}
-
-	var myClient = &http.Client{Timeout: 5 * time.Second}
-	r, err := myClient.Get(url)
-	if err != nil {
-		log.Warnf("Failed to check for new version: %s", err)
-		return
-	}
-	defer r.Body.Close()
-
-	target := new(GHRelease)
-	err = json.NewDecoder(r.Body).Decode(target)
-	if err != nil {
-		log.Warnf("Failed to decode new release version: %s", err)
-		return
-	}
-	d.LatestVer = target.Name
-
-	v1, err := version.NewVersion(d.CurVer)
-	if err != nil {
-		log.Warnf("Failed to parse CurVer: %s", err)
-		v1 = &version.Version{}
-	}
-
-	v2, err := version.NewVersion(d.LatestVer)
-	if err != nil {
-		log.Warnf("Failed to parse RepoLatestVer: %s", err)
-	} else {
-		if v1.LessThan(v2) {
-			log.Warnf("Newer Helm Dashboard version is available: %s", d.LatestVer)
-			log.Warnf("Upgrade instructions: https://github.com/komodorio/helm-dashboard#installing")
-		} else {
-			log.Debugf("Got latest version from GH: %s", d.LatestVer)
-		}
-	}
 }
 
 func NewHelmConfig(origSettings *cli.EnvSettings, ns string) (*action.Configuration, error) {
