@@ -1,8 +1,25 @@
+debug: true
+
+global:
+  imageRegistry: "ecr-proxy.nexus.acceldata.tech"
+  imagePullSecrets:
+    - registry-ecr-secret
+
+image:
+  repository: acceldata/adoc/dp/helm-dashboard
+  tag: "1.0.0"
+  
 dashboard:
+  allowWriteActions: false
   clusterWide: false
+  namespace: "{{ .Release.Namespace }}"
 
   persistence:
     enabled: false
+
+envs:
+  - name: HD_CLUSTER_MODE
+    value: "true"
 
 ingress:
   enabled: true

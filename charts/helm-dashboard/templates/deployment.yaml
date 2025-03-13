@@ -48,8 +48,11 @@ spec:
               value: {{- ternary " '1'" "" .Values.debug }}
             {{- if .Values.dashboard.namespace }}
             - name: HELM_NAMESPACE
-              value: {{ .Values.dashboard.namespace }}
+              value: {{ tpl .Values.dashboard.namespace . }}
             {{end}}
+            {{- with .Values.envs }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080

@@ -87,7 +87,7 @@ The following table lists the configurable parameters of the chart and their def
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
 ```bash
-helm upgrade --install helm-dashboard ./helm-dashboard -f helm-dashboard/override-values.yaml
+helm upgrade --install helm-dashboard ./helm-dashboard -n flow-controller -f helm-dashboard/override-values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
